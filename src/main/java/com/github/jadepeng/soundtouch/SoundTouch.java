@@ -1,60 +1,107 @@
 package com.github.jadepeng.soundtouch;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
 import com.sun.jna.ptr.PointerByReference;
 
 /**
- * 使用JNA封装的SoundTouch库
+ * SoundTouch API
  * @author jqpeng
  */
-public interface SoundTouch extends Library {
+public class SoundTouch {
 
-    SoundTouch INSTANCE = Native.load("libSoundTouchDLL.so", SoundTouch.class);
+    static final SoundTouchNative NATIVE_API = SoundTouchNative.INSTANCE;
 
-    int soundtouch_getVersionId();
+    private PointerByReference handle;
 
-    PointerByReference soundtouch_createInstance();
+    public SoundTouch() {
+        handle = NATIVE_API.soundtouch_createInstance();
+    }
 
-    void soundtouch_destroyInstance(PointerByReference h);
+    public int getVersionId() {
+        return NATIVE_API.soundtouch_getVersionId();
+    }
 
-    void soundtouch_setRate(PointerByReference h, float newRate);
+    public void dispose() {
+        NATIVE_API.soundtouch_destroyInstance(this.handle);
+    }
 
-    void soundtouch_setTempo(PointerByReference h, float newTempo);
+    public void setRate(float newRate) {
+        NATIVE_API.soundtouch_setRate(this.handle, newRate);
+    }
 
-    void soundtouch_setRateChange(PointerByReference h, float newRate);
+    public void setTempo(float newTempo) {
+        NATIVE_API.soundtouch_setTempo(this.handle, newTempo);
+    }
 
-    void soundtouch_setTempoChange(PointerByReference h, float newTempo);
+    public void setRateChange(float newRate) {
+        NATIVE_API.soundtouch_setRateChange(this.handle, newRate);
+    }
 
-    void soundtouch_setPitch(PointerByReference h, float newPitch);
+    public void setTempoChange(float newTempo) {
+        NATIVE_API.soundtouch_setTempoChange(this.handle, newTempo);
+    }
 
-    void soundtouch_setPitchOctaves(PointerByReference h, float newPitch);
+    public void setPitch(float newPitch) {
+        NATIVE_API.soundtouch_setPitch(this.handle, newPitch);
+    }
 
-    void soundtouch_setPitchSemiTones(PointerByReference h, float newPitch);
+    public void setPitchOctaves(float newPitch) {
+        NATIVE_API.soundtouch_setPitchOctaves(this.handle, newPitch);
+    }
 
-    void soundtouch_setChannels(PointerByReference h, int numChannels);
+    public void setPitchSemiTones(float newPitch) {
+        NATIVE_API.soundtouch_setPitchSemiTones(this.handle, newPitch);
+    }
 
-    void soundtouch_setSampleRate(PointerByReference h, int srate);
+    public void setChannels(int numChannels) {
+        NATIVE_API.soundtouch_setChannels(this.handle, numChannels);
+    }
 
-    void soundtouch_flush(PointerByReference h);
+    public void setSampleRate(int srate) {
+        NATIVE_API.soundtouch_setSampleRate(this.handle, srate);
+    }
 
-    void soundtouch_putSamples(PointerByReference h, float[] samples, int numSamples);
+    public void flush(PointerByReference h) {
+        NATIVE_API.soundtouch_flush(this.handle);
+    }
 
-    void  soundtouch_putSamples_i16(PointerByReference h, short[] samples, int numSamples);
+    public void putSamples(float[] samples, int numSamples) {
+        NATIVE_API.soundtouch_putSamples(this.handle, samples, numSamples);
+    }
 
-    void soundtouch_clear(PointerByReference h);
+    public void putSamplesI16(short[] samples, int numSamples) {
+        NATIVE_API.soundtouch_putSamples_i16(this.handle, samples, numSamples);
+    }
 
-    int soundtouch_setSetting(PointerByReference h, int settingId, int value);
+    public void clear() {
+        NATIVE_API.soundtouch_clear(this.handle);
+    }
 
-    int soundtouch_getSetting(PointerByReference h, int settingId);
+    int setSetting(int settingId, int value) {
+        return NATIVE_API.soundtouch_setSetting(this.handle, settingId, value);
+    }
 
-    int soundtouch_numUnprocessedSamples(PointerByReference h);
+    public int getSetting(int settingId) {
+        return NATIVE_API.soundtouch_getSetting(this.handle, settingId);
+    }
 
-    int soundtouch_receiveSamples(PointerByReference h, float[] outBuffer, int maxSamples);
+    public int numUnprocessedSamples() {
+        return NATIVE_API.soundtouch_numUnprocessedSamples(this.handle);
+    }
 
-    int soundtouch_receiveSamples_i16(PointerByReference h, short[] outBuffer, int maxSamples);
+    public int receiveSamples(float[] outBuffer, int maxSamples) {
+        return NATIVE_API.soundtouch_receiveSamples(this.handle, outBuffer, maxSamples);
+    }
 
-    int soundtouch_numSamples(PointerByReference h);
+    public int receiveSamplesI16(short[] outBuffer, int maxSamples) {
+        return NATIVE_API.soundtouch_receiveSamples_i16(this.handle, outBuffer, maxSamples);
+    }
 
-    int soundtouch_isEmpty(PointerByReference h);
+    public int numSamples() {
+        return NATIVE_API.soundtouch_numSamples(this.handle);
+    }
+
+    public int isEmpty() {
+        return NATIVE_API.soundtouch_isEmpty(this.handle);
+
+    }
 }

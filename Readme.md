@@ -11,27 +11,27 @@ SoundTouch 是一个c++变声库，官方通过JNI提供了android库，但是�
 ### 1. create instance
 
 ```java
-    SoundTouch api = SoundTouch.INSTANCE;
-    // create instance
-    PointerByReference h = api.soundtouch_createInstance();
-    
+    SoundTouch api = new SoundTouch();
 ```
 
 ### 2. set arguments
 
-    api.soundtouch_setChannels(h, wavFile.getNumChannels());
-    api.soundtouch_setRateChange(h, this.rate);
-    api.soundtouch_setPitchSemiTones(h, this.pitch);
-    api.soundtouch_setTempoChange(h, this.tempo);
+    api.setChannels(wavFile.getNumChannels());
+    api.setRateChange(this.rate);
+    api.setPitchSemiTones(this.pitch);
+    api.setTempoChange(this.tempo);
         
 ### 3. put audio data 
 
-    api.soundtouch_putSamples_i16(h, samples, framesRead);
+    api.putSamplesI16(samples, framesRead);
 
 ### 4. read changed audio data
 
-    int receivedsSample = api.soundtouch_receiveSamples_i16(h, decodeSamples, framesRead);
+    int receivedsSample = api.receiveSamplesI16(decodeSamples, framesRead);
 
+### 5. release instance
+
+    api.dispose();
 
 ## How to Build SoundTouch Libary
 

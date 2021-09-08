@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-
 import com.sun.jna.ptr.PointerByReference;
-
 
 @SpringBootApplication
 public class DemoApplication {
@@ -21,8 +19,8 @@ public class DemoApplication {
     protected float rate = 0;
     @Parameter(names = {"-tempo"}, description = "tempo")
     protected float tempo = 0;
-    @Parameter(names = {"-i"}, description = "input")
-    protected String input = "00000008.wav";
+    @Parameter(names = {"-i"}, description = "input", required = true)
+    protected String input = "";
 
     @Parameter(names = {"-o"}, description = "output")
     protected String output = "output.wav";
@@ -37,7 +35,7 @@ public class DemoApplication {
 
     private void runDemo(String[] args) throws IOException, WavFileException {
 
-        Long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
         JCommander.newBuilder()
                   .addObject(this)
@@ -46,10 +44,7 @@ public class DemoApplication {
                   .build()
                   .parse(args);
 
-        SoundTouch api = SoundTouch.INSTANCE;
-        PointerByReference h = api.soundtouch_createInstance();
-        System.out.println(h.toString());
-
+        SoundTouch api = new SoundTouch();
 
         WavFile wavFile = WavFile.openWavFile(new File(this.input));
 
@@ -59,14 +54,12 @@ public class DemoApplication {
                                          wavFile.getValidBits(),
                                          wavFile.getSampleRate());
 
-        // 设置参数
-        api.soundtouch_setSampleRate(h, (int) wavFile.getSampleRate());
-        log("soundtouch_setChannels" + wavFile.getNumChannels());
+        api.setSampleRate((int) wavFile.getSampleRate());
+        api.setChannels(wavFile.getNumChannels());
+        api.setRateChange(this.rate);
+        api.setPitchSemiTones(this.pitch);
+        api.setTempoChange(this.tempo);
 
-        api.soundtouch_setChannels(h, wavFile.getNumChannels());
-        api.soundtouch_setRateChange(h, this.rate);
-        api.soundtouch_setPitchSemiTones(h, this.pitch);
-        api.soundtouch_setTempoChange(h, this.tempo);
         int numFramesToRead = 100;
         short[] samples = new short[numFramesToRead * numFramesToRead];
         short[] decodeSamples = new short[numFramesToRead * numFramesToRead];
@@ -76,12 +69,11 @@ public class DemoApplication {
             framesRead = wavFile.readFrames(samples, numFramesToRead);
             log("read " + framesRead + " frames");
             if (framesRead > 0) {
-                api.soundtouch_putSamples_i16(h, samples, framesRead);
+                api.putSamplesI16(samples, framesRead);
                 log("put " + framesRead + " frames");
-                int receivedsSample = api.soundtouch_receiveSamples_i16(h, decodeSamples, framesRead);
-                log("soundtouch_receiveSamples_i16 " + receivedsSample + " frames");
+                int receivedsSample = api.receiveSamplesI16(decodeSamples, framesRead);
+                log("receiveSamples_i16 " + receivedsSample + " frames");
                 out.writeFrames(decodeSamples, receivedsSample);
-
             }
         }
         while (framesRead != 0);
@@ -89,11 +81,10 @@ public class DemoApplication {
         out.close();
         wavFile.close();
 
-        api.soundtouch_destroyInstance(h);
+        api.dispose();
 
         log("转换完成, 耗时：" + (System.currentTimeMillis() - start) / 1000 + "s");
 
-        //System.out.println(api.soundtouch_getVersionId());
     }
 
 }
