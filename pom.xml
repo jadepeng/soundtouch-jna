@@ -8,11 +8,11 @@
         <version>2.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.github.jadepeng</groupId>
-    <artifactId>soundtouch</artifactId>
+    <groupId>com.jadepeng.soundtouch</groupId>
+    <artifactId>soundtouch-jna</artifactId>
     <version>0.1</version>
-    <name>soundtouch</name>
-    <description>soundtouch java api</description>
+    <name>soundtouch-jna</name>
+    <description>soundtouch jna api</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>

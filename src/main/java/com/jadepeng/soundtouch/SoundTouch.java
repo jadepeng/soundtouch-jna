@@ -1,4 +1,4 @@
-package com.github.jadepeng.soundtouch;
+package com.jadepeng.soundtouch;
 
 import com.sun.jna.ptr.PointerByReference;
 

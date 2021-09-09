@@ -1,4 +1,4 @@
-package com.github.jadepeng.soundtouch;
+package com.jadepeng.soundtouch;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.sun.jna.ptr.PointerByReference;
 
 @SpringBootApplication
 public class DemoApplication {

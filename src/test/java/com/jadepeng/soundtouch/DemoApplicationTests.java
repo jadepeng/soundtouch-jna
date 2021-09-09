@@ -1,4 +1,4 @@
-package com.github.jadepeng.soundtouch;
+package com.jadepeng.soundtouch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
